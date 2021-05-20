@@ -1,6 +1,7 @@
 {
-  "name": "suggestions",
+  "name": "Suggestions",
   "version": "1.0.0",
+  "description": "",
   "main": "server.js",
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
@@ -19,7 +20,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {},
-  "description": ""
+  "license": "ISC"
 }

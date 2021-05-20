@@ -23,17 +23,7 @@ if (dil == "turkish") {
   let helpcommands = client.commands.filter(prop => prop.help.category == "help" && prop.help.name != "help")
   if (helpcommands.length == 0) return message.channel.createMessage(`Bu kategoride herhangi bir komut yok.`)
   let helpcommandsmap = helpcommands.map(p => '<:rightarrow:709539888411836526> **' + prefix + p.help.nametr + '** ' + p.help.descriptiontr + `\n`).join('')
-    if (!db.has(`botcekilis`)) message.channel.createMessage({
-      embed: {
-        title: '__**Komutlar**__',
-        description: helpcommandsmap,
-        color: colorToSigned24Bit("#2F3136"),
-        footer: {
-          text: client.user.username,
-          icon_url: client.user.avatarURL || client.user.defaultAvatarURL
-        }
-      }
-    })
+    if (!db.has(`botcekilis`)) message.channel.createMessage({embed: {title: '__**Komutlar**__', description: helpcommandsmap, color: colorToSigned24Bit("#2F3136"), footer: {text: client.user.username, icon_url: client.user.avatarURL || client.user.defaultAvatarURL}}})
     if (db.has(`botcekilis`)) message.channel.createMessage({embed: {title: '__**Komutlar**__', description: helpcommandsmap + `\n \n<:rightarrow:709539888411836526> Botta aktif bir çekiliş var!\n**Çekiliş** ${db.fetch(`botcekilis.turkish`)}\n**Katılmak için** ${prefix}çekiliş`, color: colorToSigned24Bit("#2F3136"), footer: {text: client.user.username, icon_url: client.user.avatarURL || client.user.defaultAvatarURL}}})
   }
 }

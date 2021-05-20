@@ -1,13 +1,12 @@
 const Eris = require('eris');
 const fs = require('fs');
-const client = new Eris("");
+const client = new Eris("NzA5MzUxMjg2OTIyOTM2MzYy.Xrko3Q.VfUNPfTueovMOYtNTR-o6yt83lY");
 const db = require('quick.db');
 client.commands = new Eris.Collection(undefined, undefined);
 client.aliases = new Eris.Collection(undefined, undefined);
 const DBL = require('dblapi.js')
-const dbl = new DBL("")
+const dbl = new DBL("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwOTM1MTI4NjkyMjkzNjM2MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTkwNTY3OTk2fQ.iDcVIq9MjAzpOCZ88iUK5eI2wxeW7zpsseAPjzO_InI")
 const awaitingsuggestions = new Eris.Collection(undefined, undefined)
-let version = "0.5.2"
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -40,7 +39,7 @@ fs.readdir("./commands/", async (err, files) => {
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.username}!`);
-  client.editStatus("online", {name: `.help | .invite (v${version})`, type: 5})
+  client.editStatus("online", {name: '.help | .invite', type: 5})
   setInterval(async () => dbl.postStats(client.guilds.size), 600000)
 });
 
@@ -233,39 +232,11 @@ client.on('messageCreate', async message => {
 })
 
 client.on('guildCreate', async guild => {
-  let role = null;
-  const everyonerole = guild.roles.find(r => r.name.toLowerCase().includes("everyone"))
-  if (guild.memberCount >= 5000) role = everyonerole
-  else {
-    guild.fetchMembers({limit: 5000}).then(async members => {
-      for (const r of guild.roles) {
-        let currentnumber = members.filter(m => m.roles.includes(r.id)).length
-        if (currentnumber / guild.memberCount >= 0.75) {
-          if (role == null) role = r;
-          else {
-            if (currentnumber > members.filter(m => m.roles.includes(role.id)).length) role = r;
-          }
-        }
-      }
-    })
-    if (role == null) role = everyonerole
-  }
-  let channels = guild.channels.filter(c => c.type == 0 && c.permissionOverwrites.has(role.id) && JSON.stringify(c.permissionOverwrites.get(role.id).json).includes('sendMessages') && c.permissionOverwrites.get(role.id).json.sendMessages != false)
-  if (channels.length <= 0) channels = guild.channels.filter(c => c.type == 0 && !c.permissionOverwrites.has(role.id) && !c.permissionOverwrites.has(everyonerole.id));
+  const everyonerole = guild.roles.find(r => r.name == "@everyone")
+  let channels = guild.channels.filter(c => c.type == 0 && c.permissionOverwrites.has(everyonerole.id) && JSON.stringify(c.permissionOverwrites.get(everyonerole.id).json).includes('sendMessages') && JSON.stringify(c.permissionOverwrites.get(everyonerole.id).json).split('"sendMessages":')[1].split(',')[0].split('}')[0].toString() == "true")
+  if (channels.length <= 0) channels = guild.channels.filter(c => c.type == 0 && !c.permissionOverwrites.has(everyonerole.id));
   if (channels.length <= 0) return;
-  let lasttimestamp = 0;
-  let channel;
-  if (channels.length > 1) {
-    for (const ch of channels) {
-      ch.getMessages({limit: 1}).then(async msg => {
-        if (msg[0].timestamp > lasttimestamp) {
-          lasttimestamp = msg[0].timestamp
-          channel = ch
-        }
-      })
-    }
-  }else channel = channels[0]
-  if (db.has(`botcekilis`)) channel.createMessage({
+  if (db.has(`botcekilis`)) channels[0].createMessage({
     embed: {
       title: '**__Thanks for adding Suggestions bot!__**',
       description: `This bot allows you to manage your suggestions in server easily. You can see the possible commands with **.help** command. This bot won't work if you don't set any suggestion channel.\n \n**You can get help about the setup** With **.setupinfo** command.\n \n**This bot made by** ${client.users.get('343412762522812419').username}#${client.users.get('343412762522812419').discriminator}\n \n**If you have any cool idea for bot** Use **.botsuggest** command to send suggestions to owner.\n \n**Note:** In order to work properly, bot should have manage messages permission.\n \n<:rightarrow:709539888411836526> There is an active giveaway in this bot!\n**Giveaway** ${db.fetch(`botcekilis.english`)}\n**Join with** .giveaway`,
@@ -274,7 +245,7 @@ client.on('guildCreate', async guild => {
       footer: {text: client.user.username, icon_url: client.user.avatarURL || client.user.defaultAvatarURL}
     }
   })
-  if (!db.has(`botcekilis`)) channel.createMessage({
+  if (!db.has(`botcekilis`)) channels[0].createMessage({
     embed: {
       title: '**__Thanks for adding Suggestions bot!__**',
       description: `This bot allows you to manage your suggestions in server easily. You can see the possible commands with **.help** command. This bot won't work if you don't set any suggestion channel.\n \n**You can get help about the bot setup** With **.setupinfo** command.\n \n**This bot made by** ${client.users.get('343412762522812419').username}#${client.users.get('343412762522812419').discriminator}\n \n**If you have any cool idea for bot** Use **.botsuggest** command to send suggestions to owner.\n \n**Note:** In order to work properly, bot should have manage messages permission.`,
