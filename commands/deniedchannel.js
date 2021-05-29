@@ -1,9 +1,9 @@
 const Eris = require("eris");
-const db = require('quick.db');
+const arkdb = require('ark.db');
 
 module.exports.run = async (client, message, args) => {
-
-  function colorToSigned24Bit(s) {
+  const db = client.db
+  function colorToSignedBit(s) {
     return (parseInt(s.substr(1), 16) << 8) / 256;
 }
 
