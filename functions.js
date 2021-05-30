@@ -124,7 +124,7 @@ module.exports = {
 		const map = new Map(Object.entries(db.all()));
 		let oldsugssize = 0
 		for (const i of map.keys()) {
-			if (i.startsWith(`suggestion_${guild.id}_`)) oldsugssize++
+			if (i.startsWith(`suggestion_${guild.id}_`) && Number(i.split('_')[2]) > oldsugssize) oldsugssize = Number(i.split('_')[2])
 		}
 		if (awaitingsuggestions.has(guild.id) && awaitingsuggestions.get(guild.id) >= oldsugssize) oldsugssize = awaitingsuggestions.get(guild.id);
 		awaitingsuggestions.set(guild.id, oldsugssize + 1)

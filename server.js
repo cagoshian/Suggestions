@@ -42,7 +42,7 @@ fs.readdir("./commands/", async (err, files) => {
   console.log("All commands have been loaded successfully.")
 });
 
-client.on('ready', () => {
+client.once('ready', async () => {
   console.log(`Logged in as ${client.user.username}!`);
   client.editStatus("online", {name: `.help | .invite (v${version})`, type: 5})
   setInterval(async () => dbl.postStats(client.guilds.size), 600000)
@@ -69,7 +69,7 @@ client.on('messageCreate', async message => {
   if (!message.guildID) return;
   if (!db.has(`suggestionchannel_${message.guildID}`)) return;
   if (db.fetch(`suggestionchannel_${message.guildID}`) != message.channel.id) return;
-  if (db.has(`disablemessagechannel_${message.author.id}`)) return;
+  if (db.has(`disablemessagechannel_${message.guildID}`)) return;
   const dil = db.fetch(`dil_${message.guildID}`) || "english";
   const prefix = db.fetch(`prefix_${message.guildID}`) || ".";
   if (message.content.startsWith(prefix)) return;
