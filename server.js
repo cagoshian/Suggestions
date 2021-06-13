@@ -9,7 +9,7 @@ client.aliases = new Eris.Collection(undefined, undefined);
 const autoposter = require('topgg-autoposter')
 const autopost = new autoposter.AutoPoster(settings.dbltoken, client)
 const awaitingsuggestions = new Map()
-const version = "1.0.3";
+const version = "1.0.4";
 const {manageSuggestion, deleteSuggestion, sendSuggestion, verifySuggestion} = require('./functions')
 client.db = db
 
@@ -217,6 +217,13 @@ client.on('messageDelete', async message => {
     if (i.startsWith(`suggestion_${message.guildID}_`) && db.fetch(`${i}.msgid`) == message.id) {
       deleteSuggestion(null, client.guilds.get(db.fetch(`${i}.guild`)), Number(i.split('_')[2]), client, 'english', [], true, db.fetch(`${i}.channel`))
     }
+  }
+})
+
+client.on('guildDelete', async guild => {
+  const map = new Map(Object.entries(db.all())).keys();
+  for (const i of map) {
+    if (i.includes(guild.id)) db.delete(i)
   }
 })
 
